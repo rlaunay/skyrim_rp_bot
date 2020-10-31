@@ -2,7 +2,7 @@ module.exports.run = (client, message, args) => {
     const channelId = args[1];
 
     const channel = message.guild.channels.cache.find(chan => chan.id === channelId);
-    if (!channel || args[0] !== "start" || args[0] !== "stop") return message.reply(`Commande non valide \`${client.prefix}help <nom_de_la_commande>\` pour plus d'info`); 
+    if (!channel || args[0] !== "start" && args[0] !== "stop") return message.reply(`Commande non valide \`${client.prefix}help <nom_de_la_commande>\` pour plus d'info`); 
 
     if (args[0] === "start") {
         beginCalendar(channel);
