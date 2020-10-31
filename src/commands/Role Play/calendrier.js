@@ -50,16 +50,22 @@ const skyrim_month = [
 ]
 
 const beginCalendar = (chan) => {
+    const firstDate = new Date();
+    updateDate(firstDate, chan);
+
     calendar = setInterval(() => {
         const date = new Date();
-
         if (00 === date.getHours()) {
-            const nbr = date.getDate();
-            const day = date.getDay();
-            const month = date.getMonth();
-            chan.setName(`${skyrim_day[day]} ${nbr} ${skyrim_month[month]}`);
+            updateDate(date, chan);
         }
     }, 60000);
+}
+
+const updateDate = (date, chan) => {
+    const nbr = date.getDate();
+    const day = date.getDay();
+    const month = date.getMonth();
+    chan.setName(`${skyrim_day[day]} ${nbr} ${skyrim_month[month]}`);
 }
 
 const stopCalendar = () => {
