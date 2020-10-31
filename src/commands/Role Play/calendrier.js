@@ -2,12 +2,21 @@ module.exports.run = (client, message, args) => {
     const channelId = args[1];
 
     const channel = message.guild.channels.cache.find(chan => chan.id === channelId);
-    if (!channel || args[0] !== "start" && args[0] !== "stop") return message.reply(`Commande non valide \`${client.prefix}help <nom_de_la_commande>\` pour plus d'info`); 
 
     if (args[0] === "start") {
-        beginCalendar(channel);
+        beginCalendar(client, channel);
+        return message.channel.send('Un calendrier à été mis en place');
     } else if (args[0] === "stop") {
-        stopCalendar();
+        stopCalendar(client);
+        return message.channel.send('Calendrier stopper');
+    } else if (args[0] === "info") {
+        if (client.calendar) {
+            console.log(client.calendar);
+            return message.reply('Calendrier actif');
+        } else {
+            console.log(client.calendar);
+            return message.reply('Aucun calendrier');
+        }
     }
 }
 
@@ -21,8 +30,6 @@ module.exports.help = {
     permissions: [],
     args: true
 }
-
-let calendar;
 
 const skyrim_day = [
     'Sundas',
@@ -49,16 +56,8 @@ const skyrim_month = [
     'Soirétoile'
 ]
 
-const beginCalendar = (chan) => {
-    const firstDate = new Date();
-    updateDate(firstDate, chan);
-
-    calendar = setInterval(() => {
-        const date = new Date();
-        if (00 === date.getHours()) {
-            updateDate(date, chan);
-        }
-    }, 60000);
+const beginCalendar = (client, chan) => {
+    client.calendar = setInterval(() => updateDate(new Date(), chan), 60000);
 }
 
 const updateDate = (date, chan) => {
@@ -68,6 +67,7 @@ const updateDate = (date, chan) => {
     chan.setName(`${skyrim_day[day]} ${nbr} ${skyrim_month[month]}`);
 }
 
-const stopCalendar = () => {
-    clearInterval(calendar);
+const stopCalendar = (client) => {
+    clearInterval(client.calendar);
+    client.calendar = null;
 }

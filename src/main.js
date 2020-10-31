@@ -9,6 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const client = new Client();
 client.prefix = process.env.PREFIX;
+client.calendar = null;
 ["commands", "cooldowns"].map(x => client[x] = new Collection());
 
 const loadCommands = (dir = "/commands") => {
@@ -36,8 +37,7 @@ client.on('message', message => {
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.help.aliases && cmd.help.aliases.includes(commandName));
     if (!command) return;
 
-    const isAuthorized = message.member.roles.cache.find(role => command.help.permissions.includes(role.id)) || message.member.hasPermission('ADMINISTRATOR');
-    if (!isAuthorized && command.help.admin) return message.reply('Vous n\'avez les permissions d\'utiliser cette commande');
+    if (command.help.admin && !message.member.hasPermission('ADMINISTRATOR')) return message.reply('Vous n\'avez les permissions d\'utiliser cette commande');
 
     if (command.help.args && !args.length) {
         let noArgsReply = `Il nous faut des arguments pour cette commande, ${message.author}!`;
