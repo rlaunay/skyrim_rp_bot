@@ -2,11 +2,13 @@ const { Client, Collection } = require("discord.js");
 const { readdirSync } = require("fs");
 const path = require("path");
 
-const { TOKEN, PREFIX } = require("../config");
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();;
+}
 
 
 const client = new Client();
-client.prefix = PREFIX;
+client.prefix = process.env.PREFIX;
 ["commands", "cooldowns"].map(x => client[x] = new Collection());
 
 const loadCommands = (dir = "/commands") => {
@@ -68,5 +70,8 @@ client.on('message', message => {
     command.run(client, message, args);
 });
 
-client.on('ready', () => console.log(`Logged in as ${client.user.tag} !`));
-client.login(TOKEN);
+client.on('ready', () => {
+    console.log(`Logged in as ${client.user.tag} !`);
+    client.user.setActivity(` - ${client.prefix}help`);
+});
+client.login(process.env.TOKEN);
