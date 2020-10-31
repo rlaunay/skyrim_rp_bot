@@ -1,11 +1,13 @@
 const { Client, Collection } = require("discord.js");
 const { readdirSync } = require("fs");
+const path = require("path");
 
 const { TOKEN, PREFIX } = require("../config");
 
 
 const client = new Client();
-client.commands = new Collection();
+client.prefix = PREFIX;
+["commands", "cooldowns"].map(x => client[x] = new Collection());
 
 const loadCommands = (dir = "/commands") => {
     readdirSync(`./src${dir}`).map(dirs => {
@@ -24,21 +26,44 @@ loadCommands();
 
 client.on('message', message => {
 
-    if (!message.content.startsWith(PREFIX) || message.author.bot) return;
+    if (!message.content.startsWith(client.prefix) || message.author.bot) return;
 
-    const args = message.content.slice(PREFIX.length).split(/ +/);
+    const args = message.content.slice(client.prefix.length).split(/ +/);
     const commandName = args.shift().toLowerCase();
 
-    if (!client.commands.has(commandName)) return;
-    const command = client.commands.get(commandName);
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.help.aliases && cmd.help.aliases.includes(commandName));
+    if (!command) return;
+
+    const isAuthorized = message.member.roles.cache.find(role => command.help.permissions.includes(role.id)) || message.member.hasPermission('ADMINISTRATOR');
+    if (!isAuthorized && command.help.admin) return message.reply('Vous n\'avez les permissions d\'utiliser cette commande');
 
     if (command.help.args && !args.length) {
         let noArgsReply = `Il nous faut des arguments pour cette commande, ${message.author}!`;
 
-        if (command.help.usage) noArgsReply += `\nVoici comment utiliser la commande: \`${PREFIX}${command.help.name} ${command.help.usage}\``;
+        if (command.help.usage) noArgsReply += `\nVoici comment utiliser la commande: \`${client.prefix}${command.help.name} ${command.help.usage}\``;
 
         return message.channel.send(noArgsReply);
     }
+
+    if (!client.cooldowns.has(command.help.name)) {
+        client.cooldowns.set(command.help.name, new Collection());
+    }
+
+    const timeNow = Date.now();
+    const timeStamps = client.cooldowns.get(command.help.name);
+    const cdAmount = (command.help.cooldown || 5) * 1000;
+
+    if (timeStamps.has(message.author.id)) {
+        const cdExpiration = timeStamps.get(message.author.id) + cdAmount;
+
+        if (timeNow < cdExpiration) {
+            const timeLeft = (cdExpiration - timeNow) / 1000;
+            return message.reply(`merci d'attendre ${timeLeft.toFixed(0)} seconde(s) avant de réutilisé cette commande`);
+        }
+    }
+
+    timeStamps.set(message.author.id, timeNow);
+    setTimeout(() => timeStamps.delete(message.author.id), cdAmount)
 
     command.run(client, message, args);
 });
