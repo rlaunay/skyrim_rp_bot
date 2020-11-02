@@ -8,7 +8,7 @@ module.exports.run = (client, message, args) => {
         const embed = new MessageEmbed()
             .setColor("#2ecc71")
             .addField("Liste des commandes", `Une liste de toutes les sous-catégories disponibles et leurs commandes. 
-            \nPour plus d'informations sur une commande, taper \`${client.prefix}help <nom_de_commande>\``);
+            \nPour plus d'informations sur une commande, écrire \`${client.prefix}help <nom_de_commande>\`.`);
         
         categoryList.map(category => {
             embed.addField(
@@ -20,7 +20,7 @@ module.exports.run = (client, message, args) => {
         message.channel.send(embed);
     } else {
         const command = client.commands.get(args[0]) || client.commands.find(cmd => cmd.help.aliases && cmd.help.aliases.includes(args[0]));
-        if (!command) return message.reply(`Commande inconnu faite: \`${client.prefix}help\` pour plus d'info sur les commandes disponible`);
+        if (!command) return message.reply(`Commande inconnue, faite \`${client.prefix}help\` pour avoir une liste des commandes existante.`);
 
         const embed = new MessageEmbed()
             .setColor("#2ecc71")
@@ -38,7 +38,7 @@ module.exports.help = {
     name: "help",
     aliases: ["help"],
     category: 'divers',
-    description: "Renvoie une liste de commandes ou les informations sur une seule.",
+    description: "Renvoie une liste des commandes ou les informations sur une seule.",
     usage: '<nom_de_commande>',
     admin: false,
     permissions: [],

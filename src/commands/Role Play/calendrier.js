@@ -3,21 +3,22 @@ module.exports.run = (client, message, args) => {
 
     const channel = message.guild.channels.cache.find(chan => chan.id === channelId);
 
-    if (args[0] === "start") {
-        // client.calendar.channel = channel;
+    if (args[0] === "start" && !client.calendar && channel) {
         beginCalendar(client, channel);
-        return message.channel.send('Un calendrier à été mis en place');
-    } else if (args[0] === "stop") {
+        return message.channel.send('Un calendrier a été mis en place.');
+    } else if (args[0] === "stop" && client.calendar) {
         stopCalendar(client);
-        return message.channel.send('Calendrier stopper');
+        return message.channel.send('Calendrier stoppé.');
     } else if (args[0] === "info") {
         if (client.calendar) {
             console.log(client.calendar);
-            return message.reply('Calendrier actif');
+            return message.reply('Calendrier actif.');
         } else {
             console.log(client.calendar);
-            return message.reply('Aucun calendrier');
+            return message.reply('Aucun calendrier.');
         }
+    } else {
+        return message.reply(`Un problème est survenu \`${client.prefix}help calendrier\`, pour plus d'informations sur la commande`);
     }
 }
 
@@ -25,8 +26,8 @@ module.exports.help = {
     name: "calendrier",
     aliases: [ "calendrier", "cal", "calendar"],
     category: 'role play',
-    description: "Affcihe la date du jour correspondant au RP sur un salon",
-    usage: '<start | stop> <id du salon visé>',
+    description: "Affiche la date du RP sur un salon",
+    usage: '<start|stop> <id_du_salon_visé>',
     admin: true,
     permissions: [],
     args: true
