@@ -9,7 +9,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 const client = new Client();
 client.prefix = process.env.PREFIX;
-client.calendar = null;
 ["commands", "cooldowns"].map(x => client[x] = new Collection());
 
 const loadCommands = (dir = "/commands") => {
