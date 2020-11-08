@@ -12,7 +12,7 @@ module.exports.help = {
     description: "Renvoie pong!",
     usage: '',
     cooldown: 10,
-    admin: true,
+    admin: false,
     permissions: [],
     args: false
 }
