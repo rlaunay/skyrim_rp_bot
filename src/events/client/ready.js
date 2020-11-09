@@ -1,4 +1,4 @@
-const calendar = require("./../../utils/calendar");
+const { calendar } = require("./../../utils/calendar");
 
 module.exports = (client) => {
     console.log(`Logged in as ${client.user.tag} !`);
