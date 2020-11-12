@@ -5,7 +5,7 @@ module.exports.calendar = async (client, channelId) => {
 		const channel = await client.channels.fetch(channelId);
 
 		const job = new CronJob({
-			cronTime: '0 0 0 * * *',
+			cronTime: '0 5 1 * * *',
 			onTick: () => void updateChan(channel),
 			timeZone: 'Europe/Paris',
 			runOnInit: true,
