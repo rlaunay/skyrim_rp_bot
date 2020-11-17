@@ -1,22 +1,29 @@
+import { VoiceChannel } from 'discord.js';
+import { SkyrimBot } from '../../client';
+
 const CronJob = require('cron').CronJob;
 
-module.exports.calendar = async (client, channelId) => {
+export const calendar = async (client: SkyrimBot) => {
 	try {
-		const channel = await client.channels.fetch(channelId);
+		const channel = await client.channels.fetch(client.calendarChannel);
 
-		const job = new CronJob({
-			cronTime: '0 5 1 * * *',
-			onTick: () => void updateChan(channel),
-			timeZone: 'Europe/Paris',
-			runOnInit: true,
-		});
-		job.start();
+		if (channel instanceof VoiceChannel) {
+			const job = new CronJob({
+				cronTime: '0 5 1 * * *',
+				onTick: () => void updateChan(channel),
+				timeZone: 'Europe/Paris',
+				runOnInit: true,
+			});
+			job.start();
+		} else {
+			throw new Error('Calendar channel id must be a voice channel');
+		}
 	} catch (e) {
 		console.log(e);
 	}
 };
 
-const updateChan = async (chan) => {
+const updateChan = async (chan: VoiceChannel) => {
 	const date = new Date();
 
 	const skyrim_day = [
