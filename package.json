@@ -1,18 +1,27 @@
 {
-  "name": "skyrim_rp_bot",
-  "version": "0.1.0",
-  "description": "",
-  "main": "main.js",
-  "scripts": {
-    "start": "node src/main.js"
-  },
-  "author": "Katsuo",
-  "license": "ISC",
-  "dependencies": {
-    "cron": "^1.8.2",
-    "discord.js": "^12.4.1"
-  },
-  "devDependencies": {
-    "dotenv": "^8.2.0"
-  }
+	"name": "skyrim_rp_bot",
+	"version": "0.1.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node dist/main.js",
+		"dev": "concurrently -k -n \"Typescript,Node\"  -p \"[{name}]\" -c \"blue,green\" \"tsc --watch\" \"nodemon dist/main.js\"",
+		"dev:build": "del-cli dist && tsc",
+		"build": "tsc --build",
+		"heroku-postbuild": "npm run build"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/node": "^14.14.6",
+		"concurrently": "^5.3.0",
+		"dotenv": "^8.2.0",
+		"nodemon": "^2.0.6",
+		"typescript": "^4.0.5"
+	},
+	"dependencies": {
+		"cron": "^1.8.2",
+		"discord.js": "^12.4.1"
+	}
 }
