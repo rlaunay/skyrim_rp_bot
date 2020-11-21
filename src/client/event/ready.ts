@@ -1,6 +1,6 @@
 import Event from './../../types/Event';
 
-import { calendar } from './../../services/calendar/calendar';
+import { calendar } from './../../jobs/calendar';
 
 export const onReady: Event = {
 	eventName: 'ready',

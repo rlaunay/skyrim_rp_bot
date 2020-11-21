@@ -1,5 +1,5 @@
 import { VoiceChannel } from 'discord.js';
-import { SkyrimBot } from '../../client';
+import { SkyrimBot } from '../client';
 
 const CronJob = require('cron').CronJob;
 

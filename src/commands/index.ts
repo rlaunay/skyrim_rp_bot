@@ -1,1 +1,1 @@
-export * as divers from './Divers';
+export * as divers from './divers';
