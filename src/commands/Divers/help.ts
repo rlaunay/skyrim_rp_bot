@@ -1,5 +1,5 @@
 import { MessageEmbed } from 'discord.js';
-import { Command, Parameters } from '../../types/Command';
+import { Command, CmdParameters } from '../../types/Command';
 
 export class Help implements Command {
 	readonly name = 'help';
@@ -12,7 +12,7 @@ export class Help implements Command {
 	admin = false;
 	permissions = [];
 
-	execute({ client, message, args }: Parameters) {
+	execute({ client, message, args }: CmdParameters) {
 		if (!args.length) {
 			const embed = new MessageEmbed()
 				.setColor(client.primaryColor)
@@ -24,7 +24,7 @@ export class Help implements Command {
 
 			client.categoryList.map((category) => {
 				embed.addField(
-					`${category}`,
+					`${category.replace('_', ' ')}`,
 					`${client.commands
 						.filter(
 							(cmd) => cmd.category === category.toLowerCase()
@@ -58,8 +58,8 @@ export class Help implements Command {
 				.addField(
 					'Utilisation',
 					command.usage
-						? `${client.prefix}${command.name} ${command.usage}`
-						: `${client.prefix}${command.name}`,
+						? `\`${client.prefix}${command.name} ${command.usage}\``
+						: `\`${client.prefix}${command.name}\``,
 					true
 				);
 

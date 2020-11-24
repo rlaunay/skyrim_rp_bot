@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { SkyrimBot } from '../client';
 
-export type Parameters = {
+export type CmdParameters = {
 	client: SkyrimBot;
 	message: Message;
 	args: string[];
@@ -18,5 +18,5 @@ export interface Command {
 	permissions: any[];
 	args: boolean;
 
-	execute(params: Parameters): void;
+	execute(params: CmdParameters): void;
 }

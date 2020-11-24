@@ -1,4 +1,4 @@
-import { Command, Parameters } from '../../types/Command';
+import { Command, CmdParameters } from '../../types/Command';
 
 export class Ping implements Command {
 	readonly name = 'ping';
@@ -11,7 +11,7 @@ export class Ping implements Command {
 	admin = false;
 	permissions = [];
 
-	execute({ message }: Parameters) {
+	execute({ message }: CmdParameters) {
 		const start = Date.now();
 		message.channel.send('Pong').then((res) => {
 			res.edit(`Pong : **${Date.now() - start} ms**`);
